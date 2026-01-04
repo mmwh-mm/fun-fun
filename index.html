@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>趣味心理测试 - 你的专属性格分析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header {
+            background: linear-gradient(to right, #4776E6, #8E54E9);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+        
+        .step {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .step.active {
+            background-color: white;
+            color: #4776E6;
+            transform: scale(1.1);
+        }
+        
+        .step.completed {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .content {
+            padding: 40px;
+            min-height: 400px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .auth-section {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .auth-icon {
+            font-size: 4rem;
+            color: #4776E6;
+            margin-bottom: 20px;
+        }
+        
+        .auth-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .auth-description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .code-input-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+        
+        .code-input {
+            width: 60px;
+            height: 70px;
+            font-size: 2rem;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .code-input:focus {
+            border-color: #4776E6;
+            box-shadow: 0 0 0 3px rgba(71, 118, 230, 0.2);
+        }
+        
+        .question-count {
+            color: #4776E6;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            color: #333;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background-color: rgba(71, 118, 230, 0.1);
+            border-color: #4776E6;
+        }
+        
+        .option-letter {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .option.selected .option-letter {
+            background-color: #4776E6;
+            color: white;
+        }
+        
+        .result-section {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .result-icon {
+            font-size: 4rem;
+            color: #4776E6;
+            margin-bottom: 20px;
+        }
+        
+        .result-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .result-score {
+            font-size: 1.5rem;
+            color: #4776E6;
+            margin-bottom: 20px;
+            background-color: rgba(71, 118, 230, 0.1);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+        }
+        
+        .result-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 30px;
+            text-align: left;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .result-description p {
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            background: linear-gradient(to right, #4776E6, #8E54E9);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(71, 118, 230, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            display: none;
+            padding: 10px;
+            background-color: rgba(231, 76, 60, 0.1);
+            border-radius: 5px;
+        }
+        
+        .progress-container {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #4776E6, #8E54E9);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .share-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .share-text {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .share-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .wechat { background-color: #09bb07; }
+        .weibo { background-color: #e6162d; }
+        .qq { background-color: #12b7f5; }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .code-input {
+                width: 50px;
+                height: 60px;
+                font-size: 1.8rem;
+            }
+            
+            .question-text {
+                font-size: 1.3rem;
+            }
+            
+            .result-description {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ 趣味心理测试 ✨</h1>
+            <p>探索你隐藏的性格特质，发现未知的自我</p>
+            <div class="step-indicator">
+                <div class="step active" id="step1">1</div>
+                <div class="step" id="step2">2</div>
+                <div class="step" id="step3">3</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- 第一步：验证码输入 -->
+            <div class="section active" id="auth-section">
+                <div class="auth-section">
+                    <div class="auth-icon">🔐</div>
+                    <h2 class="auth-title">输入访问验证码</h2>
+                    <p class="auth-description">
+                        请输入您获得的6位数字验证码开始测试。<br>
+                        本测试包含5个精心设计的问题，将深度分析你的性格特征，并提供专属解读报告。
+                    </p>
+                    
+                    <div class="code-input-container" id="code-inputs-container">
+                        <input type="text" class="code-input" maxlength="1" data-index="0" autocomplete="off">
+                        <input type="text" class="code-input" maxlength="1" data-index="1" autocomplete="off">
+                        <input type="text" class="code-input" maxlength="1" data-index="2" autocomplete="off">
+                        <input type="text" class="code-input" maxlength="1" data-index="3" autocomplete="off">
+                        <input type="text" class="code-input" maxlength="1" data-index="4" autocomplete="off">
+                        <input type="text" class="code-input" maxlength="1" data-index="5" autocomplete="off">
+                    </div>
+                    
+                    <div class="error-message" id="code-error">
+                        验证码错误，请重新输入（正确验证码：123456）
+                    </div>
+                    
+                    <div class="button-container">
+                        <button class="btn" id="verify-btn">开始测试</button>
+                    </div>
+                    
+                    <p style="margin-top: 20px; color: #777; font-size: 0.9rem;">
+                        💡 提示：测试验证码为 123456
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 第二步：测试问题 -->
+            <div class="section" id="question-section">
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                
+                <div class="question-count" id="question-count">问题 1/5</div>
+                <h2 class="question-text" id="question-text"></h2>
+                
+                <div class="options-container" id="options-container">
+                    <!-- 选项将通过JavaScript动态生成 -->
+                </div>
+                
+                <div class="button-container">
+                    <button class="btn" id="prev-btn" disabled>◀ 上一题</button>
+                    <button class="btn" id="next-btn">下一题 ▶</button>
+                </div>
+            </div>
+            
+            <!-- 第三步：测试结果 -->
+            <div class="section" id="result-section">
+                <div class="result-section">
+                    <div class="result-icon" id="result-icon">👑</div>
+                    <h2 class="result-title" id="result-title"></h2>
+                    <div class="result-score" id="result-score"></div>
+                    
+                    <div class="result-description" id="result-description">
+                        <!-- 结果描述将通过JavaScript动态生成 -->
+                    </div>
+                    
+                    <div class="share-section">
+                        <p class="share-text">分享你的测试结果给朋友</p>
+                        <div class="share-buttons">
+                            <div class="share-btn wechat" title="分享到微信" onclick="shareTest('微信')">
+                                <span>微</span>
+                            </div>
+                            <div class="share-btn weibo" title="分享到微博" onclick="shareTest('微博')">
+                                <span>微</span>
+                            </div>
+                            <div class="share-btn qq" title="分享到QQ" onclick="shareTest('QQ')">
+                                <span>Q</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-container">
+                        <button class="btn" id="restart-btn">重新测试</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>本测试结果仅供娱乐参考，不代表专业心理评估 | © 2024 趣味心理测试</p>
+        </div>
+    </div>
+
+    <script>
+        // 全局配置
+        const CONFIG = {
+            VALID_CODE: "123456", // 验证码
+            TOTAL_QUESTIONS: 5,   // 题目数量
+            MAX_SCORE: 50         // 最高分
+        };
+        
+        // 测试数据 - 完整版
+        const testData = {
+            questions: [
+                {
+                    id: 1,
+                    text: "在朋友聚会中，你通常扮演什么角色？",
+                    options: [
+                        { id: 'A', text: "气氛活跃者，主动调动大家情绪", score: 8 },
+                        { id: 'B', text: "倾听者，喜欢听大家聊天", score: 5 },
+                        { id: 'C', text: "组织者，负责安排活动流程", score: 7 },
+                        { id: 'D', text: "参与者，跟随大家的节奏", score: 4 }
+                    ]
+                },
+                {
+                    id: 2,
+                    text: "当你面临重要决策时，通常会怎么做？",
+                    options: [
+                        { id: 'A', text: "凭直觉快速做出决定", score: 7 },
+                        { id: 'B', text: "分析利弊后谨慎选择", score: 6 },
+                        { id: 'C', text: "征求他人意见后再决定", score: 5 },
+                        { id: 'D', text: "犹豫不决，需要很长时间考虑", score: 3 }
+                    ]
+                },
+                {
+                    id: 3,
+                    text: "周末你更倾向于如何度过？",
+                    options: [
+                        { id: 'A', text: "参加社交活动，与朋友相聚", score: 7 },
+                        { id: 'B', text: "宅在家看书、看电影或玩游戏", score: 4 },
+                        { id: 'C', text: "户外运动或探索新地方", score: 6 },
+                        { id: 'D', text: "处理未完成的工作或学习", score: 5 }
+                    ]
+                },
+                {
+                    id: 4,
+                    text: "在团队项目中，你通常承担什么角色？",
+                    options: [
+                        { id: 'A', text: "领导者，分配任务并推动进度", score: 8 },
+                        { id: 'B', text: "执行者，认真完成分配的任务", score: 5 },
+                        { id: 'C', text: "协调者，促进团队成员沟通", score: 6 },
+                        { id: 'D', text: "创意者，提供新想法和解决方案", score: 7 }
+                    ]
+                },
+                {
+                    id: 5,
+                    text: "你如何看待未来的规划？",
+                    options: [
+                        { id: 'A', text: "有明确的长期目标并逐步实现", score: 8 },
+                        { id: 'B', text: "设定短期目标，走一步看一步", score: 6 },
+                        { id: 'C', text: "随遇而安，不太做具体规划", score: 4 },
+                        { id: 'D', text: "经常改变计划，适应新情况", score: 5 }
+                    ]
+                }
+            ],
+            results: [
+                {
+                    minScore: 35,
+                    maxScore: 50,
+                    title: "✨ 魅力领袖型人格 ✨",
+                    icon: "👑",
+                    description: [
+                        "🌟 <strong>核心特质</strong>：你天生具有领导才能和人格魅力，在社交场合中总能成为焦点。你的自信和决断力使你成为团队中的核心人物。",
+                        "💼 <strong>职业倾向</strong>：在工作中，你适合担任管理职位或项目负责人。你擅长统筹规划，能够清晰地看到目标并带领团队前进。你的热情和感染力能够鼓舞团队士气。",
+                        "👥 <strong>人际关系</strong>：你真诚而直接，重视信任和忠诚。朋友们愿意跟随你，因为你总能带来积极的能量和明确的方向。",
+                        "💡 <strong>成长建议</strong>：适当关注细节，倾听团队中不同的声音，将让你的领导风格更加完善。同时，学习平衡工作与生活，避免过度承担压力。",
+                        "🎯 <strong>适合领域</strong>：企业管理、创业、项目管理、公共演讲、团队领导等。"
+                    ]
+                },
+                {
+                    minScore: 25,
+                    maxScore: 34,
+                    title: "🔍 理性分析型人格 🔍",
+                    icon: "📊",
+                    description: [
+                        "🌟 <strong>核心特质</strong>：你逻辑清晰，善于分析问题，做事有条理且谨慎。面对复杂情况时，你能够保持冷静，通过系统性的思考找到最佳解决方案。",
+                        "💼 <strong>职业倾向</strong>：你适合需要精密思考和数据分析的岗位。无论是科研、金融分析还是技术开发，你的严谨和专注都是宝贵的财富。",
+                        "👥 <strong>人际关系</strong>：你可能会显得较为内向，但与你深交的朋友都欣赏你的真诚和深度。你的建议总是经过深思熟虑，让人信服。",
+                        "💡 <strong>成长建议</strong>：偶尔尝试跟随直觉，培养一些艺术或感性的兴趣，能让你的生活更加平衡丰富。学习表达情感，让关系更亲密。",
+                        "🎯 <strong>适合领域</strong>：科学研究、数据分析、工程技术、金融分析、法律咨询等。"
+                    ]
+                },
+                {
+                    minScore: 15,
+                    maxScore: 24,
+                    title: "🤝 温和协调型人格 🤝",
+                    icon: "💝",
+                    description: [
+                        "🌟 <strong>核心特质</strong>：你性格温和，善于理解他人，是团队中的'粘合剂'。你重视和谐，不喜欢冲突，常常主动调解矛盾，促进团队合作。",
+                        "💼 <strong>职业倾向</strong>：你适合需要团队协作和支持性角色的岗位。无论是人力资源、客户服务还是教育领域，你的同理心都会让你表现出色。",
+                        "👥 <strong>人际关系</strong>：你是可靠的朋友和倾听者。朋友们愿意向你倾诉，因为你总能给予理解和支持。你的人际关系网络广泛而稳固。",
+                        "💡 <strong>成长建议</strong>：学会适当表达自己的需求和想法，不必总是迁就他人。建立清晰的边界，这样会让你的人际关系更加健康平衡。",
+                        "🎯 <strong>适合领域</strong>：人力资源管理、心理咨询、客户服务、教育培训、社会工作等。"
+                    ]
+                },
+                {
+                    minScore: 5,
+                    maxScore: 14,
+                    title: "🎨 自由创意型人格 🎨",
+                    icon: "🌈",
+                    description: [
+                        "🌟 <strong>核心特质</strong>：你富有想象力和创造力，思维活跃，不喜欢被规则束缚。你总能从不同角度看待问题，提出新颖的想法和解决方案。",
+                        "💼 <strong>职业倾向</strong>：你适合需要创意和灵活性的领域。传统刻板的工作环境会让你感到压抑，而在艺术、设计、策划或创业中你能大放异彩。",
+                        "👥 <strong>人际关系</strong>：你随性而真诚，朋友欣赏你的独特视角和活跃思维。你可能会有一群志同道合的朋友，一起探索各种有趣的事物。",
+                        "💡 <strong>成长建议</strong>：培养一定的纪律性和专注力，将创意转化为实际成果，能让你的天赋发挥更大价值。学习项目管理技能，让想法落地。",
+                        "🎯 <strong>适合领域</strong>：艺术创作、广告设计、内容创作、活动策划、创业创新等。"
+                    ]
+                }
+            ]
+        };
+        
+        // 应用状态
+        let appState = {
+            currentQuestion: 0,
+            answers: new Array(testData.questions.length).fill(null),
+            totalScore: 0,
+            isAuthenticated: false
+        };
+        
+        // 初始化应用
+        function initApp() {
+            // 设置验证码输入事件
+            setupCodeInputs();
+            
+            // 绑定按钮事件
+            document.getElementById('verify-btn').addEventListener('click', verifyCode);
+            document.getElementById('prev-btn').addEventListener('click', prevQuestion);
+            document.getElementById('next-btn').addEventListener('click', nextQuestion);
+            document.getElementById('restart-btn').addEventListener('click', restartTest);
+            
+            // 允许按回车键验证
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const activeSection = document.querySelector('.section.active');
+                    if (activeSection.id === 'auth-section') {
+                        verifyCode();
+                    }
+                }
+            });
+            
+            // 加载第一个问题（但不显示）
+            loadQuestion(0);
+        }
+        
+        // 设置验证码输入框事件
+        function setupCodeInputs() {
+            const inputs = document.querySelectorAll('.code-input');
+            
+            inputs.forEach((input, index) => {
+                // 输入时自动跳转到下一个
+                input.addEventListener('input', function(e) {
+                    if (this.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                    hideError();
+                });
+                
+                // 处理退格键
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+                
+                // 只允许输入数字
+                input.addEventListener('keypress', function(e) {
+                    if (!/[0-9]/.test(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+        
+        // 验证验证码
+        function verifyCode() {
+            const inputs = document.querySelectorAll('.code-input');
+            let enteredCode = '';
+            
+            inputs.forEach(input => {
+                enteredCode += input.value;
+            });
+            
+            if (enteredCode === CONFIG.VALID_CODE) {
+                // 验证成功
+                appState.isAuthenticated = true;
+                hideError();
+                
+                // 切换到测试页面
+                showSection('question-section');
+                
+                // 更新步骤指示器
+                updateStepIndicator(1);
+                
+                // 重置并加载第一个问题
+                appState.currentQuestion = 0;
+                loadQuestion(0);
+            } else {
+                // 验证失败
+                showError('验证码错误！请输入：' + CONFIG.VALID_CODE);
+                
+                // 清空输入框并聚焦到第一个
+                inputs.forEach(input => input.value = '');
+                inputs[0].focus();
+            }
+        }
+        
+        // 显示错误信息
+        function showError(message) {
+            const errorEl = document.getElementById('code-error');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+        
+        // 隐藏错误信息
+        function hideError() {
+            document.getElementById('code-error').style.display = 'none';
+        }
+        
+        // 显示指定部分
+        function showSection(sectionId) {
+            // 隐藏所有部分
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 显示指定部分
+            document.getElementById(sectionId).classList.add('active');
+        }
+        
+        // 更新步骤指示器
+        function updateStepIndicator(step) {
+            const steps = document.querySelectorAll('.step');
+            
+            steps.forEach((stepEl, index) => {
+                stepEl.classList.remove('active', 'completed');
+                
+                if (index < step) {
+                    stepEl.classList.add('completed');
+                } else if (index === step) {
+                    stepEl.classList.add('active');
+                }
+            });
+        }
+        
+        // 加载问题
+        function loadQuestion(index) {
+            const question = testData.questions[index];
+            
+            // 更新问题计数
+            document.getElementById('question-count').textContent = 
+                `问题 ${index + 1}/${testData.questions.length}`;
+            
+            // 更新问题文本
+            document.getElementById('question-text').textContent = question.text;
+            
+            // 更新选项
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, optionIndex) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                if (appState.answers[index] === optionIndex) {
+                    optionEl.classList.add('selected');
+                }
+                
+                optionEl.innerHTML = `
+                    <div class="option-letter">${option.id}</div>
+                    <div class="option-text">${option.text}</div>
+                `;
+                
+                optionEl.addEventListener('click', () => selectOption(index, optionIndex));
+                optionsContainer.appendChild(optionEl);
+            });
+            
+            // 更新进度条
+            const progress = ((index + 1) / testData.questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            // 更新按钮状态
+            updateButtons(index);
+        }
+        
+        // 选择选项
+        function selectOption(questionIndex, optionIndex) {
+            // 保存答案
+            appState.answers[questionIndex] = optionIndex;
+            
+            // 更新UI
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => option.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            // 启用下一题按钮
+            document.getElementById('next-btn').disabled = false;
+        }
+        
+        // 更新按钮状态
+        function updateButtons(index) {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            // 上一题按钮
+            prevBtn.disabled = index === 0;
+            
+            // 下一题按钮
+            const hasAnswer = appState.answers[index] !== null;
+            nextBtn.disabled = !hasAnswer;
+            
+            // 最后一题改变按钮文本
+            if (index === testData.questions.length - 1) {
+                nextBtn.textContent = '查看结果';
+            } else {
+                nextBtn.textContent = '下一题 ▶';
+            }
+        }
+        
+        // 上一题
+        function prevQuestion() {
+            if (appState.currentQuestion > 0) {
+                appState.currentQuestion--;
+                loadQuestion(appState.currentQuestion);
+            }
+        }
+        
+        // 下一题
+        function nextQuestion() {
+            const currentIndex = appState.currentQuestion;
+            
+            // 检查是否已回答
+            if (appState.answers[currentIndex] === null) {
+                alert('请先选择答案！');
+                return;
+            }
+            
+            // 如果是最后一题，显示结果
+            if (currentIndex === testData.questions.length - 1) {
+                calculateResult();
+                showResult();
+                return;
+            }
+            
+            // 否则，加载下一题
+            appState.currentQuestion++;
+            loadQuestion(appState.currentQuestion);
+        }
+        
+        // 计算结果
+        function calculateResult() {
+            appState.totalScore = 0;
+            
+            testData.questions.forEach((question, qIndex) => {
+                const answerIndex = appState.answers[qIndex];
+                if (answerIndex !== null) {
+                    appState.totalScore += question.options[answerIndex].score;
+                }
+            });
+        }
+        
+        // 显示结果
+        function showResult() {
+            // 找到对应的结果类型
+            let result = testData.results[0];
+            for (const r of testData.results) {
+                if (appState.totalScore >= r.minScore && appState.totalScore <= r.maxScore) {
+                    result = r;
+                    break;
+                }
+            }
+            
+            // 更新结果页面
+            document.getElementById('result-icon').textContent = result.icon;
+            document.getElementById('result-title').textContent = result.title;
+            document.getElementById('result-score').textContent = 
+                `总分：${appState.totalScore}/${CONFIG.MAX_SCORE}`;
+            
+            // 更新结果描述
+            const descriptionEl = document.getElementById('result-description');
+            descriptionEl.innerHTML = result.description
+                .map(item => `<p>${item}</p>`)
+                .join('');
+            
+            // 切换到结果页面
+            showSection('result-section');
+            
+            // 更新步骤指示器
+            updateStepIndicator(2);
+        }
+        
+        // 重新测试
+        function restartTest() {
+            // 重置状态
+            appState = {
+                currentQuestion: 0,
+                answers: new Array(testData.questions.length).fill(null),
+                totalScore: 0,
+                isAuthenticated: false
+            };
+            
+            // 清空验证码输入
+            document.querySelectorAll('.code-input').forEach(input => input.value = '');
+            
+            // 切换到验证页面
+            showSection('auth-section');
+            
+            // 重置步骤指示器
+            updateStepIndicator(0);
+            
+            // 隐藏错误信息
+            hideError();
+        }
+        
+        // 分享测试
+        function shareTest(platform) {
+            const resultTitle = document.getElementById('result-title').textContent;
+            const score = document.getElementById('result-score').textContent;
+            
+            alert(`分享到${platform}：\n\n我的心理测试结果：${resultTitle}\n${score}\n\n快来测试你的性格类型吧！`);
+        }
+        
+        // 页面加载完成后初始化应用
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
